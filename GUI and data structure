@@ -1,0 +1,202 @@
+// Created by Bennett, Jacob, Alpay, and Eston
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URI;
+import javax.swing.event.HyperlinkEvent;
+
+public class MergedApp extends JFrame {
+
+    // Stored usernames and passwords of our group members
+    private String[][] loginInfo = {
+            {"alpay.altuntas@my.uu.edu", "ILoveDataStructures"},
+            {"eston.yandell@my.uu.edu", "root"},
+            {"bennett.wilson@my.uu.edu", "Admin"},
+            {"jacob.moore@my.uu.edu", "EndProgram"}
+    };
+
+    // names of JPanels
+    private JPanel mapPanel;
+    private JPanel academicCalendarPanel;
+    private JPanel eventsPanel;
+    private JPanel mainMenuPanel;
+
+    public MergedApp() {
+        // Set up the main frame
+        setTitle("Merged App");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // Size of the frame
+        setSize(800, 600);
+
+        // Create panels with different statements and URL's
+        mapPanel = createHyperlinkPanel("Interactive Union-Trail Map:", "https://www.uu.edu/studentlife/campus-recreation/outdoor-recreation/trails/map/");
+        academicCalendarPanel = createHyperlinkPanel("Check the Academic Calendar panel for important dates and events.", "https://www.uu.edu/catalogue/pdfs/2425calendar.pdf");
+        eventsPanel = createHyperlinkPanel("Stay updated on campus events in the Events panel.", "https://www.uu.edu/events");
+
+        // Create a panel for the main menu buttons
+        mainMenuPanel = new JPanel();
+        mainMenuPanel.setLayout(new FlowLayout()); // Using FlowLayout for buttons
+        mainMenuPanel.setVisible(false); // Initially hide the main menu
+
+        // Set layout manager for the main frame
+        setLayout(new BorderLayout());
+
+        // Initially, display the main menu
+        getContentPane().add(mainMenuPanel, BorderLayout.NORTH);
+
+        // Make the frame visible
+        setVisible(true);
+    }
+
+    private JPanel createHyperlinkPanel(String statement, String url) {
+        JPanel panel = new JPanel();
+        // Creates the hyperlink which is called to the URLs above
+        JLabel label = new JLabel("<html>" + statement + "<br><a href='" + url + "'>Click here for more information</a></html>");
+        label.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // Add a mouse listener to open the URL when clicked
+        label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                openURL(url);
+            }
+        });
+
+        panel.add(label);
+        return panel;
+    }
+
+    private JButton createSwitchButton(String label, JPanel targetPanel) {
+        JButton button = new JButton(label);
+
+        // Add action listener to switch to the target panel
+        button.addActionListener(e -> switchPanel(targetPanel));
+
+        return button;
+    }
+
+    private JButton createLogoutButton() {
+        JButton logoutButton = new JButton("Logout");
+
+        // Add action listener to logout button
+        logoutButton.addActionListener(e -> {
+            mainMenuPanel.removeAll(); // Remove all buttons
+            mainMenuPanel.setVisible(false); // Hide the main menu
+            showLogin(); // Show the login screen
+        });
+
+        return logoutButton;
+    }
+
+    private void switchPanel(JPanel targetPanel) {
+        // Switch to the target panel when a button is clicked
+        getContentPane().removeAll();
+
+        // Add the main menu buttons to every panel
+        getContentPane().add(mainMenuPanel, BorderLayout.NORTH);
+
+        if (targetPanel != null) {
+            getContentPane().add(targetPanel, BorderLayout.CENTER);
+        }
+
+        revalidate();
+        repaint();
+    }
+
+    private void openURL(String url) {
+        try {
+            if (Desktop.isDesktopSupported()) {
+                Desktop desktop = Desktop.getDesktop();
+                if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                    desktop.browse(new URI(url));
+                } else {
+                    JOptionPane.showMessageDialog(this, "Desktop browsing not supported on this platform.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Desktop not supported on this platform.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error opening URL: " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            MergedApp mergedApp = new MergedApp();
+            mergedApp.showLogin();
+        });
+    }
+
+    private void showLogin() {
+        // Create components for the login screen
+        JLabel usernameLabel = new JLabel("Username:");
+        JTextField usernameField = new JTextField(15);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        JPasswordField passwordField = new JPasswordField(15);
+
+        JButton loginButton = new JButton("Login");
+
+        // Add action listener to the login button
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String inputUsername = usernameField.getText();
+                String inputPassword = new String(passwordField.getPassword());
+
+                if (login(inputUsername, inputPassword)) {
+                    // If login is successful, show the main menu buttons
+                    mainMenuPanel.add(createSwitchButton("Map", mapPanel));
+                    mainMenuPanel.add(createSwitchButton("Academic Calendar", academicCalendarPanel));
+                    mainMenuPanel.add(createSwitchButton("Events", eventsPanel));
+                    mainMenuPanel.add(createLogoutButton()); // Add logout button
+                    mainMenuPanel.setVisible(true); // Show the main menu
+                    switchPanel(null); // Switch to an empty panel
+                } else {
+                    JOptionPane.showMessageDialog(MergedApp.this, "Login failed. Invalid credentials.");
+                }
+            }
+        });
+
+        // Create a panel for the login components
+        JPanel loginPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        loginPanel.add(usernameLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        loginPanel.add(usernameField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        loginPanel.add(passwordLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        loginPanel.add(passwordField, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        loginPanel.add(loginButton, gbc);
+
+        // Set layout for the main frame and add the login panel
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(loginPanel, BorderLayout.CENTER);
+
+        revalidate();
+        repaint();
+    }
+
+    private boolean login(String username, String password) {
+        for (String[] userInfo : loginInfo) {
+            if (userInfo[0].equals(username) && userInfo[1].equals(password)) {
+                return true; // Match found
+            }
+        }
+        return false; // No match found
+    }
