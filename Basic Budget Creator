@@ -1,0 +1,56 @@
+import java.util.Scanner;
+
+public class MonthlyBudgetTracker {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Get income
+        System.out.print("Enter your monthly income: $");
+        double income = scanner.nextDouble();
+
+        // Get monthly grocery bill
+        System.out.print("Enter your monthly grocery bill: $");
+        double groceryBill = scanner.nextDouble();
+
+        // Get monthly restaurant expenses bill
+        System.out.println("Enter your monthly restaurant expenses bill: $");
+        double restaurantBill = scanner.nextDouble();
+
+        // Get monthly gas bill
+        System.out.print("Enter your monthly gas bill: $");
+        double gasBill = scanner.nextDouble();
+
+        // Get monthly savings
+        System.out.print("Enter your monthly savings amount: $");
+        double savings = scanner.nextDouble();
+
+        // Get monthly Roth IRA savings
+        System.out.print("Enter your monthly Roth IRA savings amount: $");
+        double rothIraSavings = scanner.nextDouble();
+
+        // Get monthly giving
+        System.out.print("Enter your monthly giving amount: $");
+        double giving = scanner.nextDouble();
+
+        // Calculate total expenses
+        double totalExpenses = groceryBill + gasBill + savings + rothIraSavings + giving;
+
+        // Calculate remaining balance
+        double remainingBalance = income - totalExpenses;
+
+        // Display the results
+        System.out.println("\nMonthly Budget Summary:");
+        System.out.println("Income: $" + income);
+        System.out.println("Monthly Giving: $" + giving);
+        System.out.println("Monthly Savings: $" + savings);
+        System.out.println("Monthly Roth IRA Savings: $" + rothIraSavings);
+        System.out.println("Monthly Grocery Bill: $" + groceryBill);
+        System.out.println("Monthly Restaurant Expenses Bill: $" + restaurantBill);
+        System.out.println("Monthly Gas Bill: $" + gasBill);
+        System.out.println("Total Expenses: $" + totalExpenses);
+        System.out.println("Remaining Balance: $" + remainingBalance);
+
+        scanner.close();
+    }
+}
