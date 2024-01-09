@@ -1,0 +1,100 @@
+CREATE DATABASE IF NOT EXISTS BENNETTWILSON_DB;
+USE CSCFinal_DB;
+
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Email VARCHAR(100),
+    IsActive BOOLEAN
+);
+-- Customers
+INSERT INTO Customers VALUES (1, 'Ben', 'Williams', 'ben@example.com', true);
+INSERT INTO Customers VALUES (2, 'Bennett', 'Wilson', 'bennett@example.com', false);
+INSERT INTO Customers VALUES (3, 'Barrett', 'Wilks', 'barrett@example.com', false);
+INSERT INTO Customers VALUES (4, 'Benjamin', 'Wilds', 'benjamin@example.com', true);
+INSERT INTO Customers VALUES (5, 'John', 'Johnson', 'john@example.com', true);
+INSERT INTO Customers VALUES (6, 'Johnny', 'Davis', 'johnny@example.com', true);
+INSERT INTO Customers VALUES (7, 'Johnnathan', 'Edwards', 'johnnathan@example.com', true);
+INSERT INTO Customers VALUES (8, 'Mike', 'Evans', 'mike@example.com', false);
+INSERT INTO Customers VALUES (9, 'Michael', 'Lewis', 'michael@example.com', true);
+INSERT INTO Customers VALUES (10, 'Robert', 'Talbott', 'robert@example.com', true);
+
+CREATE TABLE Sales (
+    SaleID INT PRIMARY KEY,
+    CustomerID INT,
+    Date DATE,
+    Amount DECIMAL(10, 2),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+-- Sales
+INSERT INTO Sales VALUES (1, 1, '2020-03-1', 150.00);
+INSERT INTO Sales VALUES (2, 2, '2020-03-10', 200.00);
+INSERT INTO Sales VALUES (3, 3, '2020-03-13', 120.00);
+INSERT INTO Sales VALUES (4, 4, '2020-04-21', 250.00);
+INSERT INTO Sales VALUES (5, 5, '2020-07-27', 100.00);
+INSERT INTO Sales VALUES (6, 6, '2020-02-11', 150.00);
+INSERT INTO Sales VALUES (7, 7, '2020-01-41', 200.00);
+INSERT INTO Sales VALUES (8, 8, '2020-08-50', 250.00);
+INSERT INTO Sales VALUES (9, 9, '2020-03-31', 300.00);
+INSERT INTO Sales VALUES (10, 10, '2020-01-15', 150.00);
+
+CREATE TABLE Services (
+    ServiceID INT PRIMARY KEY,
+    ServiceName VARCHAR(50),
+    Price DECIMAL(8, 2),
+    FuelGallons INT PRIMARY KEY,
+    Activity BOOLEAN
+);
+
+-- Services
+INSERT INTO Services VALUES (1, 'Lawn Mowing', 50.00, 10, true);
+INSERT INTO Services VALUES (2, 'Trimming', 30.00, 2, true);
+INSERT INTO Services VALUES (3, 'Trailer', 40.00, 0, true);
+INSERT INTO Services VALUES (4, 'Truck', 40.00, 0, false);
+INSERT INTO Services VALUES (5, 'Trailer', 40.00, 0, false);
+INSERT INTO Services VALUES (6, 'Truck', 40.00, 50, true);
+INSERT INTO Services VALUES (7, 'Trimming', 40.00, 4, true);
+INSERT INTO Services VALUES (8, 'Lawn Mowing', 40.00, 15, true);
+INSERT INTO Services VALUES (9, 'Lawn Mowing', 40.00, 17, true);
+INSERT INTO Services VALUES (10, 'Lawn Mowing', 40.00, 0, False);
+
+CREATE TABLE Employees (
+	EmpFirstName VARCHAR(25),
+    EmpLastName VARCHAR(25),
+    EmpID INT
+);
+
+-- Employees
+INSERT INTO Employees VALUES ('Jackson','Knoell',1);
+INSERT INTO Employees VALUES ('Alex','Keen',2);
+INSERT INTO Employees VALUES ('Hayden','Shirley',3);
+
+-- SQL Queries
+-- Number of active customers
+SELECT COUNT(*) FROM Customers WHERE IsActive = true;
+
+-- Number of inactive customers
+SELECT COUNT(*) FROM Customers WHERE IsActive = false;
+
+-- Total sales for a given month
+SELECT SUM(Amount) FROM Sales WHERE MONTH(Date) = 3; 
+
+-- Total sales for the year
+SELECT SUM(Amount) FROM Sales WHERE YEAR(Date) = 2020; 
+
+-- Total sales for the week
+SELECT SUM(Amount) FROM Sales WHERE WEEK(Date) = 10; 
+
+-- Total # of operational lawnmowers
+SELECT COUNT(*) FROM Services WHERE Activity = true;
+
+-- Total # of inactive lawnmowers
+SELECT COUNT(*) FROM Services WHERE Activity = false;
+
+-- total fuel usage per truck
+SELECT SUM(Amount) FROM Services WHERE FuelGallons = Truck;
+
+-- total # of employees
+SELECT Count(*) FROM Employees WHERE Employees;
