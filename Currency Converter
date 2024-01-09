@@ -1,0 +1,112 @@
+// Created by Bennett Wilson, Jackson Knoell, Alex Keen, and Noah Reid
+// Exchange rates from 4/20/2023
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class CurrencyConverter extends JFrame implements ActionListener {
+    private JTextField amountField;
+    private JComboBox<String> fromCurrency;
+    private JComboBox<String> toCurrency;
+    private JLabel resultLabel;
+
+    public CurrencyConverter() {
+        // Set up the main frame
+        super("Currency Converter"); // Makes the Title of the frame, Currency Converter
+        setSize(400, 200); // sets the size of the frame
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Create the GUI components
+        JPanel panel = new JPanel(new GridLayout(4, 2));
+        // Title of a text field asking for amount
+        JLabel amountLabel = new JLabel("Amount:");
+        amountField = new JTextField(10);
+        // Select Initial Currency Type
+        JLabel fromLabel = new JLabel("From:");
+        fromCurrency = new JComboBox<String>(new String[]{"$ USD", "€ EUR", "£ GBP", "¥ JPY"});
+        // Select Final Currency Type
+        JLabel toLabel = new JLabel("To:");
+        toCurrency = new JComboBox<String>(new String[]{"$ USD", "€ EUR", "£ GBP", "¥ JPY"});
+        // Button for user to press when ready to convert to final currency
+        JButton convertButton = new JButton("Convert");
+        convertButton.addActionListener(this);
+        resultLabel = new JLabel("");
+
+        // Add the components to the panel
+        panel.add(amountLabel);
+        panel.add(amountField);
+        panel.add(fromLabel);
+        panel.add(fromCurrency);
+        panel.add(toLabel);
+        panel.add(toCurrency);
+        panel.add(convertButton);
+        panel.add(resultLabel);
+
+        // Add the panel to the frame
+        add(panel);
+        setVisible(true);
+    } // Public Currency Converter
+
+    public void actionPerformed(ActionEvent e) {
+        // Get values from GUI components
+        double amount = Double.parseDouble(amountField.getText());
+        String from = (String) fromCurrency.getSelectedItem();
+        String to = (String) toCurrency.getSelectedItem();
+
+        // Performs conversions
+        double result;
+        // Convert from USD to EUR, GBP, or JPY
+        if (from.equals("$ USD")) {
+            if (to.equals("€ EUR")) {
+                result = amount * 0.91; // Exchange rate from USD to EUR
+            } else if (to.equals("£ GBP")) {
+                result = amount * 0.8; // Exchange rate from USD to GBP
+            } else if (to.equals("¥ JPY")) {
+                result = amount * 134.23; // Exchange rate from USD to JPY
+            } else {
+                result = amount; // Result of conversion from USD to EUR, JPY, or GBP
+            }
+            // Convert from EUR to USD, GBP, or JPY
+        } else if (from.equals("€ EUR")) {
+            if (to.equals("$ USD")) {
+                result = amount * 1.1; // Exchange rate from EUR to USD
+            } else if (to.equals("£ GBP")) {
+                result = amount * 0.88; // Exchange rate from EUR to GBP
+            } else if (to.equals("¥ JPY")) {
+                result = amount * 147.2; // Exchange rate from EUR to JPY
+            } else {
+                result = amount; // Result of conversion from EUR to JPY, USD, or GBP
+            }
+            // Convert from GBP to USD, EUR, or JPY
+        } else if (from.equals("£ GBP")) {
+            if (to.equals("$ USD")) {
+                result = amount * 1.24; // Exchange rate from GBP to USD
+            } else if (to.equals("€ EUR")) {
+                result = amount * 1.13; // Exchange rate from GBP to EUR
+            } else if (to.equals("¥ JPY")) {
+                result = amount * 167.01; // Exchange rate from GBP to JPY
+            } else {
+                result = amount; // Result of conversion from GBP to EUR, USD, or JPY
+            }
+        }
+        // Convert from JPY to USD, EUR, or GBP
+        else {
+            if (to.equals("$ USD")) {
+                result = amount * 0.0074; // Exchange rate from JPY to USD
+            } else if (to.equals("€ EUR")) {
+                result = amount * 0.0068; // Exchange rate from JPY to EUR
+            } else if (to.equals("£ GBP")) {
+                result = amount * 0.006; // Exchange rate from JPY to GBP
+            } else {
+                result = amount; // Result of conversion from JPY to EUR, USD, or GBP
+            }
+        }
+
+        // Displays results
+        resultLabel.setText(String.format("%.2f %s = %.2f %s", amount, from, result, to));
+    } // action performed
+
+    public static void main(String[] args) {
+        new CurrencyConverter();
+    } // Main
+} // Currency Converter
