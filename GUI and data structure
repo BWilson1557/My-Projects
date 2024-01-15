@@ -1,3 +1,7 @@
+// GUI for Union University. 
+// Links to academic calender, events calender, and campus map.
+// 
+//
 // Created by Bennett, Jacob, Alpay, and Eston
 import javax.swing.*;
 import java.awt.*;
