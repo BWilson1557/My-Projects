@@ -1,3 +1,6 @@
+-- Creates Database for a fake company.
+-- Includes values for customers, employees, and sales.
+
 CREATE DATABASE IF NOT EXISTS BENNETTWILSON_DB;
 USE CSCFinal_DB;
 
