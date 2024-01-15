@@ -1,3 +1,5 @@
+// Personal Project that calculates a basic budget!
+
 import java.util.Scanner;
 
 public class MonthlyBudgetTracker {
