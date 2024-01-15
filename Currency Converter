@@ -1,3 +1,5 @@
+// Basic Currency Converter for Dollar, Pound, Euro, and Yen.
+// Uses a GUI for best user interaction.
 // Created by Bennett Wilson, Jackson Knoell, Alex Keen, and Noah Reid
 // Exchange rates from 4/20/2023
 import java.awt.*;
