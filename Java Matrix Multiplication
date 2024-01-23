@@ -1,0 +1,70 @@
+import java.io.*;
+// Created by Bennett Wilson
+
+// This code conducts 2x2 matrix multiplication.
+//
+//   (Multiplier)   x (Multiplicand) = Product
+//
+public class MatrixMultiplication {
+    public static void main(String[] args){
+
+        // Create matrix multiplier
+        int[][] multiplier = {
+                {3, 4},
+                {5,6}
+        };
+
+        // Create matrix multiplicand
+        int[][] multiplicand = {
+                {7,8},
+                {9,10}
+        };
+
+        // Create matrix product.
+        int[][] matrix_product;
+        matrix_product = new int[2][2];
+
+        // Process matrix using FOR loop...
+        for(int p_row =0; p_row < matrix_product.length; p_row++){
+            for(int p_col = 0; p_col < matrix_product.length; p_col++){
+                for(int inner_index = 0; inner_index < matrix_product.length; inner_index++){
+                    matrix_product[p_row][p_col] += multiplier[p_row][inner_index] * multiplicand[inner_index][p_col];
+                }
+                System.out.printf("matrix_product[%d][%d]=%d\t\t", p_row,p_col,matrix_product[p_row][p_col]);
+            }
+            System.out.println();
+        }
+
+        // Reset the values of matrix_product
+        for(int p_row = 0; p_row < matrix_product.length; p_row++){
+            for(int p_col = 0; p_col < matrix_product.length; p_col++){
+                matrix_product[p_row][p_col] = 0;
+            }
+        }
+
+        System.out.println();
+        System.out.println("WHILE Loop Coming...");
+        System.out.println();
+        System.out.println();
+
+        // Process matrix using WHILE loop...
+        // Init Counter Var's
+        int p_row = 0;
+        int p_col = 0;
+        int inner_index = 0;
+        while(p_row < matrix_product.length){
+            p_col = 0;
+            while(p_col < matrix_product.length){
+                inner_index = 0;
+                while(inner_index < matrix_product.length){
+                    matrix_product[p_row][p_col] += multiplier[p_row][inner_index] * multiplicand[inner_index][p_col];
+                    inner_index++;
+                }
+                System.out.printf("matrix_product[%d][%d]=%d\t\t", p_row,p_col,matrix_product[p_row][p_col]);
+                p_col++;
+            }
+            System.out.println();
+            p_row++;
+        }
+    } // END: main
+} // End MatrixMultiplication.
