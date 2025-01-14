@@ -1,0 +1,60 @@
+import os
+
+# Path to fasta file. This will vary depending on what computer you are using.
+file_path = '/Users/bennettwilson/Downloads/SequencesBen.fasta'
+
+# Print the current working directory
+print("Current working directory:", os.getcwd())
+
+try:
+    # Check if the file exists
+    if not os.path.isfile(file_path):
+        print(f"File not found: {file_path}")
+        exit(1)
+
+    # Define the transposons
+    transposon1 = "TTAACCCTAGAAAGATAGTC"
+    transposon2 = "AATTGGGATCTTTCTATCAG"
+
+    def contains_transposon(sequence, transposon1, transposon2):
+        return transposon1 in sequence or transposon2 in sequence
+
+    def remove_transposon_and_after(sequence, transposon1, transposon2):
+        index1 = sequence.find(transposon1)
+        index2 = sequence.find(transposon2)
+        if index1 != -1:
+            return sequence[:index1]
+        elif index2 != -1:
+            return sequence[:index2]
+        else:
+            return sequence
+
+    def read_fasta(file_path):
+        with open(file_path, 'r', encoding='utf-8', newline=None) as file:
+            sequences = []
+            sequence = ''
+            for line in file:
+                line = line.strip()
+                if line.startswith('>'):
+                    if sequence:
+                        sequences.append(sequence)
+                        sequence = ''
+                else:
+                    sequence += line
+            if sequence:  # Add the last sequence
+                sequences.append(sequence)
+            return sequences
+
+    # Read the fasta file
+    sequences = read_fasta(file_path)
+
+    # Sort sequences to ensure consistent processing order
+    sequences.sort()
+
+    for sequence in sequences:
+        if contains_transposon(sequence, transposon1, transposon2):
+            print("\nSequence without transposon:")
+            print(remove_transposon_and_after(sequence, transposon1, transposon2))
+
+except PermissionError as e:
+    print(f"Permission error: {e}. Please check the file permissions and try again.")
