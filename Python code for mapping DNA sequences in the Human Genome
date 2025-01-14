@@ -1,0 +1,64 @@
+from Bio.Blast import NCBIWWW, NCBIXML
+import sys
+import pandas as pd
+
+# Read DNA sequences from an excel file
+def read_dna_sequence_from_excel(file_path, sheet_name='Sheet1', column_name='Sequence'):
+    """Read DNA sequence from an Excel file."""
+    try:
+        df = pd.read_excel(file_path, sheet_name=sheet_name)
+        if column_name not in df.columns:
+            raise ValueError(f"The column '{column_name}' is not found in the Excel sheet.")
+        sequence = df[column_name].iloc[0].strip().replace("\n", "")
+        if not sequence:
+            raise ValueError("The cell is empty or contains an invalid sequence.")
+        return sequence
+    except Exception as e:
+        print(f"Error reading Excel file: {e}")
+        sys.exit(1)
+
+def blast_sequence(sequence):
+    """Submit the DNA sequence to NCBI BLAST and get results."""
+    try:
+        print("Submitting sequence to BLAST...")
+        result_handle = NCBIWWW.qblast("blastn", "nt", sequence)
+        print("BLAST search complete.")
+        return result_handle
+    except Exception as e:
+        print(f"Error with BLAST submission: {e}")
+        sys.exit(1)
+
+def parse_blast_results(result_handle):
+    """Parse BLAST results and print the top hits."""
+    try:
+        blast_record = NCBIXML.read(result_handle)
+        if not blast_record.alignments:
+            print("No alignments found.")
+            return
+
+        print("\nBLAST Results:")
+        for alignment in blast_record.alignments[:5]:  # Get top 5 alignments
+            for hsp in alignment.hsps:
+                print(f"****Alignment****")
+                print(f"Sequence: {alignment.title}")
+                print(f"Length: {alignment.length}")
+                print(f"E-value: {hsp.expect}")
+                print(f"Identities: {hsp.identities}/{hsp.align_length}")
+                print(f"Score: {hsp.score}")
+                print(f"Query: {hsp.query[0:75]}...")
+                print(f"Match: {hsp.match[0:75]}...")
+                print(f"Subject: {hsp.sbjct[0:75]}...")
+                print()
+    except Exception as e:
+        print(f"Error parsing BLAST results: {e}")
+
+def main():
+    file_path = input("Enter the path to the DNA sequence Excel file: ")
+    sheet_name = input("Enter the sheet name (default is 'Sheet1'): ") or 'Sheet1'
+    column_name = input("Enter the column name containing the sequence (default is 'Sequence'): ") or 'Sequence'
+    sequence = read_dna_sequence_from_excel(file_path, sheet_name, column_name)
+    result_handle = blast_sequence(sequence)
+    parse_blast_results(result_handle)
+
+if __name__ == "__main__":
+    main()
