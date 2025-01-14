@@ -1,0 +1,30 @@
+# Install and load necessary packages
+install.packages("readxl")
+install.packages("stringr")
+
+library(readxl)
+library(stringr)
+
+# Read the Excel file
+file_path <- "users/Downloads/Bennett Wilson/Sequences-3.xlsx"  # Replace with the actual path to your Excel file
+sheet_name <- "Sheet1"  # Replace with the actual sheet name if it's not the first sheet
+
+# Assuming the DNA sequences are in a column named "DNA_Sequence"
+dna_data <- read_excel(file_path, sheet = sheet_name)
+
+# Define the transposons to search for
+transposons <- c("TTAACCCTAGAAAGATAGTC", "AATTGGGATCTTTCTATCAG")
+
+# Function to find sequences containing the transposons
+find_sequences_with_transposons <- function(dna_sequence, transposons) {
+  any(str_detect(dna_sequence, transposons))
+}
+
+# Apply the function to each DNA sequence
+dna_data$Contains_Transposon <- sapply(dna_data$DNA_Sequence, find_sequences_with_transposons, transposons)
+
+# Extract the sequences that contain the transposons
+sequences_with_transposons <- dna_data[dna_data$Contains_Transposon, ]
+
+# Display the sequences with transposons
+print(sequences_with_transposons)
